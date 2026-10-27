@@ -1,0 +1,9 @@
+<%- include('header') %>
+<form class="card narrow" method="post" action="/login">
+  <h2>Login</h2>
+  <label>Email</label><input type="email" name="email" required>
+  <label>Password</label><input type="password" name="password" required>
+  <button>Login</button>
+  <p>New student? <a href="/register">Register</a></p>
+</form>
+<%- include('footer') %>

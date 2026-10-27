@@ -1,0 +1,59 @@
+<%
+const fmt = d => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+const t = s => { let [h, m] = s.split(':'); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${m} ${ap}`; };
+%><!doctype html>
+<html><head><meta charset="utf-8"><title>Hall Permission - <%= b.activity %></title>
+<style>
+  body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.7; background: #e5e7eb; margin: 0; }
+  .page { background: #fff; width: 210mm; min-height: 297mm; margin: 16px auto; padding: 28mm 28mm; box-sizing: border-box; }
+  .date { text-align: right; }
+  p { margin: 0 0 10pt; }
+  .addr p { margin: 0; }
+  .sign { margin-top: 48pt; }
+  .toolbar { text-align: center; padding: 10px; font-family: sans-serif; }
+  @media print { body { background: #fff; } .page { margin: 0; } .toolbar { display: none; } }
+  @page { size: A4; margin: 0; }
+</style></head>
+<body>
+<div class="toolbar"><button onclick="window.print()">Print / Save as PDF</button></div>
+<div class="page">
+  <p class="date">Date: <%= b.decided_at.toLocaleDateString('en-GB').replace(/\//g, ' / ') %></p>
+
+  <div class="addr" style="margin-bottom:14pt">
+    <p>To,</p>
+    <p><%= b.student %></p>
+    <p><%= b.department %></p>
+    <p>K. K. W. I. E. E. R.,</p>
+    <p>Nashik.</p>
+  </div>
+
+  <p><b>Subject: Permission to Use <%= b.hall %> for Conducting <%= b.activity %>.</b></p>
+
+  <p>Dear Student,</p>
+
+  <p>With reference to your request, this is to inform you that <b><%= b.hall %></b> has been allotted to you
+  for conducting <b><%= b.activity %></b> on <b><%= fmt(b.event_date) %></b>
+  from <b><%= t(b.start_time) %></b> to <b><%= t(b.end_time) %></b>,
+  under the guidance of faculty incharge <b><%= b.faculty_incharge %></b>.</p>
+
+  <% if (b.remarks) { %><p><%= b.remarks %></p><% } %>
+
+  <p>You are requested to ensure that the hall is used only for the above-mentioned activity, discipline is maintained,
+  and the hall is left clean and in good condition after the event.</p>
+
+  <% if (facilities.length) { %><p>Facilities available in the hall: <%= facilities.map(f => f.name + (f.quantity > 1 ? ' (' + f.quantity + ')' : '')).join(', ') %>.</p><% } %>
+  <% if (contacts.length) { %><p>For arrangements, please contact: <%= contacts.map(c => c.role + ' – ' + c.name + ' (' + c.phone + ')').join('; ') %>.</p><% } %>
+
+  <p>Regards,</p>
+
+  <div class="sign">
+    <svg width="190" height="64" viewBox="0 0 190 64" xmlns="http://www.w3.org/2000/svg" aria-label="Signature">
+      <text x="6" y="38" font-family="'Brush Script MT','Segoe Script','Lucida Handwriting',cursive" font-size="34" fill="#1e3a8a" transform="rotate(-4 6 38)"><%= b.authority.split(' ')[0] %></text>
+      <path d="M4 50 C 40 42, 80 58, 120 46 S 170 44, 186 40" fill="none" stroke="#1e3a8a" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <p><b><%= b.authority %></b><br>
+    Hall Incharge, K. K. W. I. E. E. R., Nashik<br>
+    <small>Digitally signed on <%= b.decided_at.toLocaleString('en-GB') %></small></p>
+  </div>
+</div>
+</body></html>

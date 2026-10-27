@@ -1,0 +1,11 @@
+<%- include('header') %>
+<form class="card narrow" method="post" action="/register">
+  <h2>Student Registration</h2>
+  <label>Full name</label><input name="name" required>
+  <label>Department</label><input name="department" placeholder="e.g. Computer Engineering" required>
+  <label>Email</label><input type="email" name="email" required>
+  <label>Password</label><input type="password" name="password" minlength="6" required>
+  <button>Register</button>
+  <p><a href="/login">Back to login</a></p>
+</form>
+<%- include('footer') %>

@@ -1,0 +1,18 @@
+<%- include('header') %>
+<form class="card" method="post" action="/book">
+  <h2>Apply for Hall Permission</h2>
+  <label>Hall</label>
+  <select name="hall_id" required>
+    <% halls.forEach(h => { %><option value="<%= h.id %>"><%= h.name %><%= h.capacity ? ' (capacity ' + h.capacity + ')' : '' %></option><% }) %>
+  </select>
+  <label>Activity / Event name</label><input name="activity" placeholder="e.g. CyberSabha 2.0" required>
+  <label>Details (optional)</label><textarea name="description" rows="3"></textarea>
+  <label>Faculty incharge of the activity</label><input name="faculty_incharge" required>
+  <label>Date</label><input type="date" name="event_date" required>
+  <div class="row">
+    <div><label>Start time</label><input type="time" name="start_time" required></div>
+    <div><label>End time</label><input type="time" name="end_time" required></div>
+  </div>
+  <button>Submit request</button> <a href="/dashboard">Cancel</a>
+</form>
+<%- include('footer') %>

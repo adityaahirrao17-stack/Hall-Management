@@ -1,0 +1,47 @@
+<%- include('header') %>
+<% if (!hall) { %><p>No halls yet.</p><% } else { %>
+<div class="card">
+  <h2>Weekly Schedule</h2>
+  <form method="get" class="inline" style="margin-bottom:12px">
+    <select name="hall" onchange="this.form.submit()" style="width:220px">
+      <% halls.forEach(h => { %><option value="<%= h.id %>" <%= h.id === hall.id ? 'selected' : '' %>><%= h.name %></option><% }) %>
+    </select>
+    <input type="hidden" name="week" value="<%= days[0] %>">
+    <a class="btn small" href="/schedule?hall=<%= hall.id %>&week=<%= prev %>">&laquo; Prev week</a>
+    <a class="btn small" href="/schedule?hall=<%= hall.id %>">This week</a>
+    <a class="btn small" href="/schedule?hall=<%= hall.id %>&week=<%= next %>">Next week &raquo;</a>
+  </form>
+  <table class="grid">
+    <tr><th>Time</th>
+      <% days.forEach(d => { const dt = new Date(d + 'T00:00:00Z'); %>
+      <th><%= dt.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' }) %><br><small><%= dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'UTC' }) %></small></th>
+      <% }) %>
+    </tr>
+    <% HOURS.forEach((h, i) => { %>
+    <tr><td><%= String(h).padStart(2,'0') %>:00 – <%= String(h+1).padStart(2,'0') %>:00</td>
+      <% grid[i].forEach(b => { %>
+        <% if (!b) { %><td class="free">Free</td>
+        <% } else { %><td class="<%= b.status === 'approved' ? 'busy' : 'wait' %>"><%= b.activity %><br><small><%= b.status === 'approved' ? 'Booked' : 'Pending' %></small></td><% } %>
+      <% }) %>
+    </tr>
+    <% }) %>
+  </table>
+  <p><small><span class="badge approved">Free</span> available &nbsp; <span class="badge rejected">Booked</span> approved &nbsp; <span class="badge pending">Pending</span> awaiting approval</small></p>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Facilities – <%= hall.name %></h2>
+    <table><tr><th>Item</th><th>Qty</th></tr>
+      <% facilities.forEach(f => { %><tr><td><%= f.name %></td><td><%= f.quantity %></td></tr><% }) %>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Contacts</h2>
+    <table><tr><th>Role</th><th>Name</th><th>Phone</th></tr>
+      <% contacts.forEach(c => { %><tr><td><%= c.role %></td><td><%= c.name %></td><td><%= c.phone %></td></tr><% }) %>
+    </table>
+  </div>
+</div>
+<% } %>
+<%- include('footer') %>

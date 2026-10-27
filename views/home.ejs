@@ -1,0 +1,32 @@
+<%- include('header') %>
+<section class="hero">
+  <h1>Book a College Hall, Hassle-free</h1>
+  <p>Apply online for seminar halls and labs, check weekly availability, and get your official allotment letter once the Hall Incharge approves.</p>
+  <% if (user) { %>
+    <a class="btn" href="/dashboard">Go to dashboard</a>
+  <% } else { %>
+    <a class="btn" href="/login">Login</a>
+    <a class="btn ghost" href="/register">Student Registration</a>
+  <% } %>
+  <a class="btn ghost" href="<%= user ? '/schedule' : '/login' %>">View Schedule</a>
+</section>
+
+<h2>How it works</h2>
+<div class="steps">
+  <div class="step"><div class="n">1</div><b>Register &amp; apply</b><br>Choose the hall, date, time, activity and faculty incharge.</div>
+  <div class="step"><div class="n">2</div><b>Check availability</b><br>See each hall's weekly timetable and free slots.</div>
+  <div class="step"><div class="n">3</div><b>Incharge verifies</b><br>The Hall Incharge approves or rejects with remarks.</div>
+  <div class="step"><div class="n">4</div><b>Get your letter</b><br>An allotment letter is generated and ready to print.</div>
+</div>
+
+<h2>Our halls</h2>
+<div class="hall-grid">
+  <% halls.forEach(h => { %>
+  <div class="hall">
+    <h3><%= h.name %></h3>
+    <small>Capacity: <%= h.capacity || '—' %></small>
+    <a class="btn small light" href="<%= user ? '/schedule?hall=' + h.id : '/login' %>">Schedule &amp; facilities</a>
+  </div>
+  <% }) %>
+</div>
+<%- include('footer') %>

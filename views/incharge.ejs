@@ -1,0 +1,44 @@
+<%- include('header') %>
+<% const cnt = s => bookings.filter(b => b.status === s).length; %>
+<div class="stats">
+  <div class="stat"><b><%= cnt('pending') %></b><span>Pending</span></div>
+  <div class="stat"><b><%= cnt('approved') %></b><span>Approved</span></div>
+  <div class="stat"><b><%= cnt('rejected') %></b><span>Rejected</span></div>
+</div>
+<div class="card">
+  <h2>Hall Requests</h2>
+  <table>
+    <tr><th>Student</th><th>Hall</th><th>Activity</th><th>When</th><th>Faculty</th><th>Status / Action</th></tr>
+    <% bookings.forEach(b => { %>
+    <tr>
+      <td><%= b.student %><br><small><%= b.department %></small></td>
+      <td><%= b.hall %></td><td><%= b.activity %></td>
+      <td><%= b.event_date.toLocaleDateString('en-GB') %><br><%= b.start_time.slice(0,5) %>–<%= b.end_time.slice(0,5) %></td>
+      <td><%= b.faculty_incharge %></td>
+      <td>
+        <% if (b.status === 'pending') { %>
+        <form method="post" action="/booking/<%= b.id %>/decide" class="inline">
+          <input name="remarks" placeholder="Remarks (optional)">
+          <button class="green" name="action" value="approve">Approve</button>
+          <button class="red" name="action" value="reject">Reject</button>
+        </form>
+        <% } else { %>
+        <span class="badge <%= b.status %>"><%= b.status %></span>
+        <% if (b.status === 'approved') { %> <a class="btn small" href="/booking/<%= b.id %>/letter" target="_blank">Letter</a><% } %>
+        <% } %>
+      </td>
+    </tr>
+    <% }) %>
+    <% if (!bookings.length) { %><tr><td colspan="6">No requests yet.</td></tr><% } %>
+  </table>
+</div>
+<div class="card">
+  <h2>Halls</h2>
+  <p><%= halls.map(h => h.name + (h.capacity ? ' (' + h.capacity + ')' : '')).join(', ') %></p>
+  <form method="post" action="/halls" class="inline">
+    <input name="name" placeholder="Hall name" required>
+    <input name="capacity" type="number" placeholder="Capacity">
+    <button style="margin-top:0">Add hall</button>
+  </form>
+</div>
+<%- include('footer') %>
